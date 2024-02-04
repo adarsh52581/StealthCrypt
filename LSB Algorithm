@@ -1,0 +1,51 @@
+from PIL import Image
+
+def binary_to_string(binary_data):
+    # Convert binary data to a string
+    str_data = ''.join(chr(int(binary_data[i:i+8], 2)) for i in range(0, len(binary_data), 8))
+    return str_data
+
+def string_to_binary(str_data):
+    # Convert string data to binary
+    binary_data = ''.join(format(ord(char), '08b') for char in str_data)
+    return binary_data
+
+def hide_data(image_path, data_to_hide, output_path):
+    # Open the image
+    img = Image.open(image_path)
+
+    # Convert data to binary
+    binary_data = string_to_binary(data_to_hide)
+
+    # Embed data into the least significant bit of each pixel
+    data_index = 0
+    img_data = list(img.getdata())
+
+    for pixel in img_data:
+        new_pixel = list(pixel)
+        for i in range(3):  # RGB channels
+            if data_index < len(binary_data):
+                new_pixel[i] = new_pixel[i] & ~1 | int(binary_data[data_index])
+                data_index += 1
+
+        img.putdata(tuple(new_pixel))
+
+    # Save the stego image
+    img.save(output_path)
+
+def retrieve_data(stego_image_path):
+    # Open the stego image
+    stego_img = Image.open(stego_image_path)
+
+    # Extract data from the least significant bit of each pixel
+    binary_data = ''
+    stego_img_data = list(stego_img.getdata())
+
+    for pixel in stego_img_data:
+        for i in range(3):  # RGB channels
+            binary_data += str(pixel[i] & 1)
+
+    # Convert binary data to a string
+    hidden_data = binary_to_string(binary_data)
+
+    return hidden_data
