@@ -1,0 +1,36 @@
+import os
+import secrets
+
+def generate_key():
+    """
+    Generate a random encryption key
+    """
+    # Define the length of the key in bytes (256 bits)
+    key_length_bytes = 32
+    
+    # Generate random bytes using a secure random number generator
+    random_bytes = secrets.token_bytes(key_length_bytes)
+    
+    # Convert the bytes to a hexadecimal representation
+    key_hex = random_bytes.hex()
+    
+    # Convert the hexadecimal representation to a byte string
+    key_byte_string = bytes.fromhex(key_hex)
+    
+    return key_byte_string
+
+def save_key(key, key_file):
+    """
+    Save the encryption key to a file
+    """
+    with open(key_file, 'wb') as f:
+        f.write(key)
+
+def load_key(key_file):
+    """
+    Load the encryption key from a file
+    """
+    with open(key_file, 'rb') as f:
+        return f.read()
+
+# Rest of the code remains the same...
