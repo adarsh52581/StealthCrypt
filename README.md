@@ -1,2 +1,2 @@
 # StealthCrypt
-A webapp that allows users to encrypt data and hide it inside an image or multimedia using LSB and AES algorithms
+Welcome to StealthCrypt, an innovative web application designed to provide users with a seamless and secure solution for encrypting sensitive data and concealing it within images or multimedia files. Our application employs a robust combination of the Least Significant Bit (LSB) algorithm for data hiding and the Advanced Encryption Standard (AES) algorithm for encryption, ensuring both confidentiality and covert communication.
