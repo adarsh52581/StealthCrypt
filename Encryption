@@ -33,4 +33,70 @@ def load_key(key_file):
     with open(key_file, 'rb') as f:
         return f.read()
 
-# Rest of the code remains the same...
+def encrypt_file(file_path, key):
+    """
+    Encrypt a file using AES encryption
+    """
+    cipher_suite = Fernet(key)
+    with open(file_path, 'rb') as f:
+        file_data = f.read()
+    encrypted_data = cipher_suite.encrypt(file_data)
+    with open(file_path + '.encrypted', 'wb') as f:
+        f.write(encrypted_data)
+
+def decrypt_file(encrypted_file_path, key):
+    """
+    Decrypt an encrypted file using AES decryption
+    """
+    cipher_suite = Fernet(key)
+    with open(encrypted_file_path, 'rb') as f:
+        encrypted_data = f.read()
+    decrypted_data = cipher_suite.decrypt(encrypted_data)
+    original_file_path = encrypted_file_path.replace('.encrypted', '')
+    with open(original_file_path, 'wb') as f:
+        f.write(decrypted_data)
+
+def main():
+    """
+    Main function to interact with the user and handle encryption/decryption
+    """
+    key_file = 'encryption_key.key'
+    if not os.path.exists(key_file):
+        print("No encryption key found. Generating a new one...")
+        key = generate_key()
+        save_key(key, key_file)
+        print("Encryption key generated and saved successfully.")
+    else:
+        print("Encryption key found.")
+        key = load_key(key_file)
+
+    while True:
+        print("\nSelect an option:")
+        print("1. Encrypt a file")
+        print("2. Decrypt a file")
+        print("3. Exit")
+        choice = input("Enter your choice: ")
+
+        if choice == '1':
+            file_to_encrypt = input("Enter the path of the file to encrypt: ")
+            if os.path.exists(file_to_encrypt):
+                encrypt_file(file_to_encrypt, key)
+                print(f"{file_to_encrypt} encrypted successfully.")
+            else:
+                print("File not found. Please enter a valid file path.")
+        elif choice == '2':
+            encrypted_file_path = input("Enter the path of the encrypted file: ")
+            if os.path.exists(encrypted_file_path):
+                decrypt_file(encrypted_file_path, key)
+                print(f"{encrypted_file_path} decrypted successfully.")
+            else:
+                print("File not found. Please enter a valid file path.")
+        elif choice == '3':
+            print("Exiting...")
+            break
+        else:
+            print("Invalid choice. Please enter a valid option.")
+
+if __name__ == "__main__":
+    main()
+
